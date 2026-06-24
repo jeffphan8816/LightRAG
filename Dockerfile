@@ -11,7 +11,7 @@ WORKDIR /app
 COPY lightrag_webui/ ./lightrag_webui/
 
 # Build frontend assets for inclusion in the API package
-RUN --mount=type=cache,id=bun-cache,target=/root/.bun/install/cache \
+RUN --mount=type=cache,id=railway::uv-cache,target=/root/.local/share/uv \
     cd lightrag_webui \
     && bun install --frozen-lockfile \
     && bun run build
