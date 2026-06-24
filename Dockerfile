@@ -44,8 +44,7 @@ COPY setup.py .
 COPY uv.lock .
 
 # Install base, API, and offline extras without the project to improve caching
-RUN --mount=type=cache,id=uv,target=/root/.local/share/uv \
-    uv sync --frozen --no-dev --extra api --extra offline --no-install-project --no-editable
+RUN uv sync --frozen --no-dev --extra api --extra offline --no-install-project --no-editable
 
 # Copy project sources after dependency layer
 COPY lightrag/ ./lightrag/
