@@ -11,8 +11,7 @@ WORKDIR /app
 COPY lightrag_webui/ ./lightrag_webui/
 
 # Build frontend assets for inclusion in the API package
-RUN --mount=type=cache,id=bun,target=/root/.bun/install/cache \
-    cd lightrag_webui \
+RUN cd lightrag_webui \
     && bun install --frozen-lockfile \
     && bun run build
 
@@ -55,8 +54,7 @@ COPY lightrag/ ./lightrag/
 COPY --from=frontend-builder /app/lightrag/api/webui ./lightrag/api/webui
 
 # Sync project in non-editable mode and ensure pip is available for runtime installs
-RUN --mount=type=cache,id=uv,target=/root/.local/share/uv \
-    uv sync --frozen --no-dev --extra api --extra offline --no-editable \
+RUN uv sync --frozen --no-dev --extra api --extra offline --no-editable \
     && /app/.venv/bin/python -m ensurepip --upgrade
 
 # Prepare offline cache directory and pre-populate tiktoken data
@@ -88,8 +86,7 @@ ENV PATH=/app/.venv/bin:/root/.local/bin:$PATH
 
 # Install dependencies with uv sync (uses locked versions from uv.lock)
 # And ensure pip is available for runtime installs
-RUN --mount=type=cache,id=uv,target=/root/.local/share/uv \
-    uv sync --frozen --no-dev --extra api --extra offline --no-editable \
+RUN uv sync --frozen --no-dev --extra api --extra offline --no-editable \
     && /app/.venv/bin/python -m ensurepip --upgrade
 
 # Create persistent data directories AFTER package installation
