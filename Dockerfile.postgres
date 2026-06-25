@@ -16,7 +16,7 @@ RUN git clone --depth 1 --branch release/PG18/1.7.0 https://github.com/apache/ag
     && make install
 
 # Final stage: Create a final image by copying the files created in the build stage
-FROM pgvector/pgvector:pg18-trixie
+FROM pgvector/pgvector:pg18-trixie AS final
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends --no-install-suggests \
