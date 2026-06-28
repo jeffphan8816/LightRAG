@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lightrag-retriever"
+version = "0.1.0"
+description = "Standalone retriever package extracted from LightRAG — graph-based retrieval with multiple query modes"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "json_repair",
+    "numpy>=1.24.0,<3.0.0",
+    "tiktoken",
+]
+
+[project.optional-dependencies]
+postgres = [
+    "asyncpg>=0.29.0",
+    "pgvector>=0.3.0",
+    "tenacity>=8.0.0",
+]
+llm = [
+    "openai>=1.56.0",
+    "tenacity>=8.0.0",
+]
+all = [
+    "asyncpg>=0.29.0",
+    "pgvector>=0.3.0",
+    "openai>=1.56.0",
+    "tenacity>=8.0.0",
+]
+test = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["lightrag_retriever*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

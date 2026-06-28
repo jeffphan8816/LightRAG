@@ -13,6 +13,9 @@ services:
       - ./data/inputs:/app/data/inputs
       - ./data/prompts:/app/data/prompts
       - ./.env:/app/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
     deploy:
       restart_policy:
         condition: on-failure
@@ -25,3 +28,26 @@ services:
       PROMPT_DIR: "/app/data/prompts"
       HOST: "0.0.0.0"
       PORT: "9621"
+
+  postgres:
+    image: lightrag-postgres:local
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER:-rag}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}"
+      POSTGRES_DB: "${POSTGRES_DATABASE:-lightrag}"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rag} -d ${POSTGRES_DATABASE:-lightrag}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    stop_grace_period: 30s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
